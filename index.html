@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Stanford Course Chatbot</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; }
+        input, button { font-size: 16px; margin: 10px 0; }
+        #answer, #sources { margin-top: 20px; }
+    </style>
+</head>
+<body>
+    <h1>Stanford Course Chatbot</h1>
+    <input type="text" id="question" placeholder="Ask a question about courses" style="width: 300px;">
+    <button onclick="askQuestion()">Ask</button>
+    <div id="answer"></div>
+    <div id="sources"></div>
+
+    <script>
+    function askQuestion() {
+        var question = $('#question').val();
+        $.ajax({
+            url: '/ask',
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify({ question: question }),
+            success: function(response) {
+                $('#answer').text(response.answer);
+                $('#sources').text('Sources: ' + response.sources.join(', '));
+            },
+            error: function(xhr, status, error) {
+                $('#answer').text('Error: ' + error);
+                console.error(xhr.responseText);
+            }
+        });
+    }
+    </script>
+</body>
+</html>
